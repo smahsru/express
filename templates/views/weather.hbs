@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{>links}}
+</head>
+
+<body>
+    {{>header}}
+
+
+    <div class="row my-4 mt-5 g-0">
+        <div class="col-10 mx-auto text-center">
+
+            <form action="" class='form'>
+                <input type="text" id='input' placeholder="search city weather">
+                <input type="submit" id='submitbtn'>
+            </form>
+        </div>
+        <div class="col-10 mx-auto text-center">
+            <div class="top_layer">
+                <p id="day"></p>
+                <p id="today_data"></p>
+            </div>
+            <div class="main_layer">
+                <p id="city_name"></p>
+                <div class="middle_layer">
+                    <p id="temp"> <span>0</span> <span>0</span> </p>
+                    <p id="temp_status"> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+    {{!-- ------------------------------------------------------------------------------------------------- --}}
+    <script>
+
+
+        const submitbtn = document.getElementById('submitbtn');
+        const city_name = document.getElementById('city_name');
+        const temp = document.getElementById('temp');
+        const input = document.getElementById('input');
+        const temp_status = document.getElementById('temp_status');
+        const day = document.getElementById('day');
+        const today_data = document.getElementById('today_data');
+
+
+        let aryData = [];
+
+
+
+
+
+const date = new Date().getDay() -1
+ var weekDays = new Array(7);
+ weekDays[0] = "Monday";
+ weekDays[1] = "Tuesday";
+ weekDays[2] = "Wednesday";
+ weekDays[3] = "Thursday";
+ weekDays[4] = "Friday";
+ weekDays[5] = "Saturday";
+ weekDays[6] = "Sunday";
+
+
+
+
+
+
+        const getInfo = (event) => {
+
+            event.preventDefault();
+            let inputVal = input.value;
+
+            if (inputVal === '') {
+                alert('please enter the city name in input field')
+            } else {
+
+
+                let url = `http://api.openweathermap.org/data/2.5/weather?q=${inputVal} &appid=46e346ef19fab26e6b14d50a248f42dc`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        aryData = [data];
+                        city_name.innerHTML = aryData[0].name;
+                        temp.innerHTML =( aryData[0].main.temp -32)*5/9;
+                        day.innerHTML = weekDays[date];
+                        today_data.innerHTML = new Date().getMonth()
+
+                        if (aryData[0].weather[0].main === 'Clear') {
+                            temp_status.innerHTML = ` <i class="fas fa-sun"></i>`;
+                        } else if (aryData[0].weather[0].main === 'haze') {
+                            temp_status.innerHTML = `<i class="fas fa-smog"></i>`;
+                        }
+                        else if (aryData[0].weather[0].main === 'Clouds') {
+                            temp_status.innerHTML = `<i class="fas fa-cloud"></i>`;
+                        }
+                        else if (aryData[0].weather[0].main === 'Sunny') {
+                            temp_status.innerHTML = `<i class="fas fa-sun"></i>`;
+                        }
+                        else if (aryData[0].weather[0].main === 'Rainy') {
+                            temp_status.innerHTML = `<i class="fas fa-cloud-showers-heavy"></i>`;
+                        }
+                        console.log(aryData[0])
+                        input.value  = ''
+
+
+                    });
+
+
+                
+            }
+
+
+
+
+
+        }
+        console.log(aryData)
+        submitbtn.addEventListener('click', getInfo);
+
+
+    </script>
+
+
+    {{!-- api.openweathermap.org/data/2.5/weather?q=tank&appid=46e346ef19fab26e6b14d50a248f42dc --}}
+</body>
+
+</html>
